@@ -16,10 +16,6 @@ export class AppComponent implements OnInit {
       console.log(result);
     });
 
-    this.apiService.login("alexis@hotmail.com", "12345").subscribe(result => {
-      console.log(result);
-    });
-
     this.apiService
       .getMe(
         // tslint:disable-next-line: max-line-length
