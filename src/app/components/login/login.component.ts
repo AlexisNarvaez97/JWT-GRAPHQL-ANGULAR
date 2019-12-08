@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { LoginData, LoginResult } from "./login.interface";
 import { ApiService } from "../../services/api.service";
+import { Router } from "@angular/router";
+import { MeData } from "../me/me.interface";
 
 @Component({
   selector: "app-login",
@@ -15,9 +17,22 @@ export class LoginComponent implements OnInit {
 
   error: boolean;
 
-  constructor(private apiService: ApiService) {}
+  show: boolean;
 
-  ngOnInit() {}
+  constructor(private apiService: ApiService, private router: Router) {}
+
+  ngOnInit() {
+    if (localStorage.getItem("tokenJWT") !== null) {
+      this.apiService.getMe().subscribe((result: MeData) => {
+        if (result.status) {
+          console.log(result.user);
+          this.router.navigate(["/me"]);
+        }
+      });
+    } else {
+      this.show = true;
+    }
+  }
 
   save() {
     console.log(this.user);
@@ -25,11 +40,13 @@ export class LoginComponent implements OnInit {
     this.apiService
       .login(this.user.email, this.user.password)
       .subscribe((result: LoginResult) => {
+        this.show = true;
         // console.log(result);
         if (result.status) {
           this.error = false;
           localStorage.setItem("tokenJWT", result.token);
           console.log("Login Correcto");
+          this.router.navigate(["/me"]);
         } else {
           this.error = true;
           localStorage.removeItem("tokenJWT");

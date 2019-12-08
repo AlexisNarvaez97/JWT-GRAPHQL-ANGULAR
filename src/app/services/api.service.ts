@@ -46,14 +46,14 @@ export class ApiService {
   }
 
   // Info con el token
-  getMe(token: string) {
+  getMe() {
     return this.apollo
       .watchQuery({
         query: meData,
         fetchPolicy: "network-only",
         context: {
           headers: new HttpHeaders({
-            authorization: token
+            authorization: localStorage.getItem('tokenJWT')
           })
         }
       })

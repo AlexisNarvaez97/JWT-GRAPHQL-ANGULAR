@@ -6,11 +6,17 @@ import { AppComponent } from './app.component';
 import { GraphqlModule } from './graphql/graphql.module';
 import { LoginComponent } from './components/login/login.component';
 import { FormsModule } from '@angular/forms';
+import { MeComponent } from './components/me/me.component';
+import { UsersComponent } from './components/users/users.component';
+import { NavbarComponent } from './components/shared/navbar/navbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    MeComponent,
+    UsersComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
