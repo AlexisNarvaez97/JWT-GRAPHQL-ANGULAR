@@ -1,9 +1,11 @@
+import { registerData } from './../operations/mutation';
 import { login } from "./../operations/query";
 import { Injectable } from "@angular/core";
 import { Apollo } from "apollo-angular";
 import { map } from "rxjs/operators";
 import { getUsers, meData } from "../operations/query";
 import { HttpHeaders } from "@angular/common/http";
+import { RegisterData } from '../componentes/register/register.interface';
 
 @Injectable({
   providedIn: "root"
@@ -44,4 +46,16 @@ export class ApiService {
         })
       );
   }
+
+
+  register(user: RegisterData) {
+    return this.apollo
+      .mutate({
+        mutation: registerData,
+        variables: {
+          user
+        }
+      });
+  }
+
 }

@@ -28,7 +28,11 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.auth.updateStateSession(false);
     localStorage.removeItem('tokenJWT');
-    this.router.navigate(['/login']);
+    const currentUser = this.router.url;
+    if (currentUser !== '/register' && currentUser !== '/users') {
+      this.router.navigate(['/login']);
+    }
+    // console.log(currentUser);
   }
 
   ngOnInit() {
