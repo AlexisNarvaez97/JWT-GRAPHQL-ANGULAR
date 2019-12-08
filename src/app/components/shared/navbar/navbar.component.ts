@@ -26,28 +26,11 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    this.auth.updateStateSession(false);
-    localStorage.removeItem('tokenJWT');
-    const currentUser = this.router.url;
-    if (currentUser !== '/register' && currentUser !== '/users') {
-      this.router.navigate(['/login']);
-    }
+    this.auth.logout();
     // console.log(currentUser);
   }
 
   ngOnInit() {
-    if (localStorage.getItem("tokenJWT") !== null) {
-      this.auth.getMe().subscribe((result: MeData) => {
-        if (result.status) {
-          // console.log(result.user);
-          this.access = true;
-        } else {
-          this.access = false;
-        }
-      });
-    } else {
-      // No hay token
-      this.access = false;
-    }
+    this.auth.start();
   }
 }

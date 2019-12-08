@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ApiService } from "../../services/api.service";
 import { Router } from "@angular/router";
 import { MeData } from "./me.interface";
-import { AuthService } from '../../services/auth.service';
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: "app-me",
@@ -10,34 +10,25 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ["./me.component.css"]
 })
 export class MeComponent implements OnInit {
-
   user: any;
 
-  constructor(private apiService: ApiService, private router: Router, private auth: AuthService) {}
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    private auth: AuthService
+  ) {
+    this.auth.userVar$.subscribe((data: MeData) => {
+      if (data !== null && data.status !== false) {
+        this.user = data.user;
+      }
+    });
+  }
 
   ngOnInit() {
-    if (localStorage.getItem("tokenJWT") !== null) {
-      this.auth.getMe().subscribe((result: MeData) => {
-        if (result.status) {
-          console.log(result.user);
-          this.user = result.user;
-        } else {
-          console.log("TOKEN NO VALIDO");
-          localStorage.removeItem('tokenJWT');
-          this.logout();
-        }
-      });
-    } else {
-      // No hay token
-      this.logout();
-    }
+    this.auth.start();
   }
 
   logout() {
-    this.auth.updateStateSession(false);
-    localStorage.removeItem('tokenJWT');
-    this.router.navigate(["/login"]);
+    this.auth.logout();
   }
-
-
 }

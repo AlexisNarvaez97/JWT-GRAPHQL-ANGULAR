@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { LoginData, LoginResult } from "./login.interface";
 import { ApiService } from "../../services/api.service";
 import { Router } from "@angular/router";
-import { MeData } from "../me/me.interface";
+import { MeData } from '../me/me.interface';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
@@ -20,24 +20,21 @@ export class LoginComponent implements OnInit {
 
   show: boolean;
 
-  constructor(private apiService: ApiService, private router: Router, private authService: AuthService) {}
+  constructor(private apiService: ApiService, private router: Router, private authService: AuthService) {
+    this.authService.userVar$.subscribe((data: MeData) => {
+      if (data === null || data.status === false) {
+        this.show = true;
+      } else {
+        this.show = false;
+      }
+    });
+  }
 
   ngOnInit() {
-    if (localStorage.getItem("tokenJWT") !== null) {
-      this.authService.getMe().subscribe((result: MeData) => {
-        if (result.status) {
-          console.log(result.user);
-          this.router.navigate(["/me"]);
-        }
-      });
-    } else {
-      this.show = true;
-    }
+    this.authService.start();
   }
 
   save() {
-    console.log(this.user);
-
     this.apiService
       .login(this.user.email, this.user.password)
       .subscribe((result: LoginResult) => {
