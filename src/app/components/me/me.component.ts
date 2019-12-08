@@ -2,6 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { ApiService } from "../../services/api.service";
 import { Router } from "@angular/router";
 import { MeData } from "./me.interface";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: "app-me",
@@ -12,11 +13,11 @@ export class MeComponent implements OnInit {
 
   user: any;
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(private apiService: ApiService, private router: Router, private auth: AuthService) {}
 
   ngOnInit() {
     if (localStorage.getItem("tokenJWT") !== null) {
-      this.apiService.getMe().subscribe((result: MeData) => {
+      this.auth.getMe().subscribe((result: MeData) => {
         if (result.status) {
           console.log(result.user);
           this.user = result.user;
@@ -33,6 +34,7 @@ export class MeComponent implements OnInit {
   }
 
   logout() {
+    this.auth.updateStateSession(false);
     localStorage.removeItem('tokenJWT');
     this.router.navigate(["/login"]);
   }

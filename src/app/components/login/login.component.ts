@@ -3,6 +3,7 @@ import { LoginData, LoginResult } from "./login.interface";
 import { ApiService } from "../../services/api.service";
 import { Router } from "@angular/router";
 import { MeData } from "../me/me.interface";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: "app-login",
@@ -19,11 +20,11 @@ export class LoginComponent implements OnInit {
 
   show: boolean;
 
-  constructor(private apiService: ApiService, private router: Router) {}
+  constructor(private apiService: ApiService, private router: Router, private authService: AuthService) {}
 
   ngOnInit() {
     if (localStorage.getItem("tokenJWT") !== null) {
-      this.apiService.getMe().subscribe((result: MeData) => {
+      this.authService.getMe().subscribe((result: MeData) => {
         if (result.status) {
           console.log(result.user);
           this.router.navigate(["/me"]);
@@ -46,9 +47,11 @@ export class LoginComponent implements OnInit {
           this.error = false;
           localStorage.setItem("tokenJWT", result.token);
           console.log("Login Correcto");
+          this.authService.updateStateSession(true);
           this.router.navigate(["/me"]);
         } else {
           this.error = true;
+          this.authService.updateStateSession(false);
           localStorage.removeItem("tokenJWT");
           console.log("Login Incorrecto");
         }

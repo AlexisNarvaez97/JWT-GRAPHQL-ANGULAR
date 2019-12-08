@@ -44,23 +44,4 @@ export class ApiService {
         })
       );
   }
-
-  // Info con el token
-  getMe() {
-    return this.apollo
-      .watchQuery({
-        query: meData,
-        fetchPolicy: "network-only",
-        context: {
-          headers: new HttpHeaders({
-            authorization: localStorage.getItem('tokenJWT')
-          })
-        }
-      })
-      .valueChanges.pipe(
-        map((result: any) => {
-          return result.data.me;
-        })
-      );
-  }
 }
